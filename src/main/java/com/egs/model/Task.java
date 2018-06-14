@@ -12,18 +12,17 @@ import java.util.Objects;
  * @author Hayk_Mkhitaryan
  */
 @Entity
-@Table(name = "impl")
+@Table(name = "task")
 public class Task {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false,  fetch = FetchType.LAZY)
     @JoinColumn(name = "REPORTER_USER_ID")
     private User reporterUser;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false,  fetch = FetchType.LAZY)
     @JoinColumn(name = "ASSIGNEE_USER_ID")
     private User assigneeUser;
 
@@ -34,6 +33,18 @@ public class Task {
     private Date createdDate;
 
     private String description;
+
+    public Task(User reporterUser, User assigneeUser, Severity severity, Status status, Date createdDate, String description) {
+        this.reporterUser = reporterUser;
+        this.assigneeUser = assigneeUser;
+        this.severity = severity;
+        this.status = status;
+        this.createdDate = createdDate;
+        this.description = description;
+    }
+
+    public Task() {
+    }
 
     public User getAssigneeUser() {
         return assigneeUser;

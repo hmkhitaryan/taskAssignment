@@ -1,9 +1,7 @@
 package com.egs.controller;
 
-import com.egs.enums.Type;
 import com.egs.exception.UserNotFoundException;
 import com.egs.model.Comment;
-import com.egs.model.Notification;
 import com.egs.model.Task;
 import com.egs.service.NotificationService;
 import com.egs.service.TaskService;
@@ -15,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 /**
@@ -33,66 +32,64 @@ public class TaskController {
     private NotificationService notificationService;
 
     @GetMapping("/assignment/users/{id}")
-    public List<Task> getTasksByAssignee(@PathVariable("id") Long userId) {
-        return taskService.findAllByUserId(userId);
+    public ResponseEntity<List<Task>> getTasksByAssignee(@PathVariable("id") Long userId) {
+        return new ResponseEntity<>(taskService.findAllByUserId(userId), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/comments")
-    @ResponseBody
-    public List<Comment> getTaskCommentsById(@PathVariable("id") Long id) {
-        return taskService.getAllCommentsById(id);
+    public ResponseEntity<List<Comment>> getTaskCommentsById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(notificationService.findAllCommentsById(id), HttpStatus.OK);
     }
 
-    // impl CRUD
-    @SuppressWarnings("unchecked")
+    // task CRUD
     @GetMapping("/{id}")
-    @ResponseBody
-    public ResponseEntity getTask(@PathVariable("id") Long id) {
-
-        Task task = taskService.findById(id);
+    public ResponseEntity<Task> getTask(@PathVariable("id") Long id) {
+        final Task task = taskService.findByIdJoinFetch(id);
         if (task == null) {
-            return new ResponseEntity("No Tasks found for ID " + id, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity(task, HttpStatus.OK);
+        return  new ResponseEntity<>(task, HttpStatus.OK);
     }
 
-    @SuppressWarnings("unchecked")
     @PostMapping(value = "/")
-    public ResponseEntity createTask(@RequestBody Task task) {
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
         ValidateUtils.validateTask(task);
         taskService.saveTask(task);
         notificationService.saveNotification(task);
-        LOGGER.info("impl with id {} successfully created", task.getId());
+        LOGGER.info("task with id {} successfully created", task.getId());
 
-        return new ResponseEntity(task, HttpStatus.OK);
+        return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
-    @SuppressWarnings("unchecked")
     @PutMapping("/{id}")
-    public ResponseEntity updateTask(@RequestBody Task task) {
+    public ResponseEntity<Task> updateTask(@RequestBody Task task) {
         taskService.updateTask(task);
 
-        return new ResponseEntity(task, HttpStatus.OK);
+        return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
-    @SuppressWarnings("unchecked")
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteTask(@PathVariable Long id) {
+    public ResponseEntity<Task> deleteTask(@PathVariable Long id) {
         try {
             taskService.deleteById(id);
-            LOGGER.info("impl with id {} successfully deleted", id);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity("No tasks found for ID " + id, HttpStatus.NOT_FOUND);
+            LOGGER.info("task with id {} successfully deleted", id);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity(id, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @ExceptionHandler({EntityNotFoundException.class})
+    public ResponseEntity<Task> handleNotFoundError() {
+        LOGGER.warn("no entity found with specified identifier");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
-    @SuppressWarnings("unchecked")
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity handleUserError() {
-        return new ResponseEntity("No tasks found for that user", HttpStatus.NOT_FOUND);
+    @ExceptionHandler({IllegalStateException.class, UserNotFoundException.class})
+    public ResponseEntity<Task> handleEntityCreationError() {
+        LOGGER.warn("Any of users of the specified task not found");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

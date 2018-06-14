@@ -1,6 +1,7 @@
 package com.egs.service.impl;
 
 import com.egs.enums.Type;
+import com.egs.model.Comment;
 import com.egs.model.Notification;
 import com.egs.model.Task;
 import com.egs.repo.NotificationRepo;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author Hayk_Mkhitaryan
  */
@@ -16,9 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class NotificationServiceImpl implements NotificationService {
 
-    private static final String NEW_TASK_IS_CREATED = "new impl is created";
+    private static final String NEW_TASK_IS_CREATED = "new task is created";
 
-    private static final String TASK_ASSIGNEE_CHANGED = "impl assignee is changed";
+    private static final String TASK_ASSIGNEE_CHANGED = "task assignee is changed";
 
     @Autowired
     private NotificationRepo notificationRepo;
@@ -35,5 +38,10 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = new Notification(
                 task.getReporterUser(), task.getAssigneeUser(), NEW_TASK_IS_CREATED, Type.NEW_TASK_CREATED);
         notificationRepo.save(notification);
+    }
+
+    @Override
+    public List<Comment> findAllCommentsById(Long id) {
+        return notificationRepo.findAllCommentsById(id);
     }
 }

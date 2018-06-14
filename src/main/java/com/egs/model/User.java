@@ -19,10 +19,30 @@ public class User {
     @JsonIgnore
     private String password;
 
+    @OneToMany(mappedBy = "reporterUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Task> assignedTasks;
+
+    @OneToMany(mappedBy = "assigneeUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Task> reportedTasks;
+
+    @OneToMany(mappedBy = "reporterUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Notification>  reportedNotes;
+
+    @OneToMany(mappedBy = "assigneeUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Notification> assignedNotes;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     @JsonIgnore
     private Set<Role> roles;
+
+    public User() {
+    }
+
+    public User(String username, Set<Role> roles) {
+        this.username = username;
+        this.roles = roles;
+    }
 
     public Long getId() {
         return id;

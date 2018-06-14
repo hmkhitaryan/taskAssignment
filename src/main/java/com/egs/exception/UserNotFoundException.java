@@ -7,16 +7,9 @@ public class UserNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = 7414129986758383880L;
 
-    private String userId;
-
     private String description;
 
-    public UserNotFoundException(String userId, String description) {
-        super(userId);
+    public UserNotFoundException(String description) {
         this.description = description;
-    }
-
-    public String getUserId() {
-        return userId;
     }
 }

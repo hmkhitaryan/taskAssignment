@@ -15,17 +15,21 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private User sender;
+    @ManyToOne(optional = false,  fetch = FetchType.LAZY)
+    @JoinColumn(name = "REPORTER_USER_ID")
+    private User reporterUser;
 
-    private User receiver;
+    @ManyToOne(optional = false,  fetch = FetchType.LAZY)
+    @JoinColumn(name = "ASSIGNEE_USER_ID")
+    private User assigneeUser;
 
     private String comment;
 
     private Type type;
 
-    public Notification(User sender, User receiver, String comment, Type type) {
-        this.sender = sender;
-        this.receiver = receiver;
+    public Notification(User reporterUser, User assigneeUser, String comment, Type type) {
+        this.reporterUser = reporterUser;
+        this.assigneeUser = assigneeUser;
         this.comment = comment;
         this.type = type;
     }
@@ -38,20 +42,20 @@ public class Notification {
         this.id = id;
     }
 
-    public User getSender() {
-        return sender;
+    public User getReporterUser() {
+        return reporterUser;
     }
 
-    public void setSender(User sender) {
-        this.sender = sender;
+    public void setReporterUser(User reporterUser) {
+        this.reporterUser = reporterUser;
     }
 
-    public User getReceiver() {
-        return receiver;
+    public User getAssigneeUser() {
+        return assigneeUser;
     }
 
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
+    public void setAssigneeUser(User assigneeUser) {
+        this.assigneeUser = assigneeUser;
     }
 
     public String getComment() {

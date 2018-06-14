@@ -12,20 +12,20 @@ public interface TaskService {
 
     Task findById(Long id);
 
+    Task findByIdJoinFetch(Long id);
+
     List<Task> findAllByUserId(Long id);
 
     List<Task> findAll();
 
-    void saveTask(Task task);
+    Task saveTask(Task task);
 
     void deleteById(Long id);
 
     /**
-     * Update impl.
+     * Update task.
      *
      * @param task to be updated
      */
     void updateTask(Task task);
-
-    List<Comment> getAllCommentsById(Long id);
 }
