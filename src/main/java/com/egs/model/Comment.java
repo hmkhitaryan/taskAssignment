@@ -7,9 +7,8 @@ import java.util.Date;
  * @author Hayk_Mkhitaryan
  */
 @Entity
-@Table(name = "comment")
+@Table(name = "COMMENT")
 public class Comment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

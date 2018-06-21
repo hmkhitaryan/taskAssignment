@@ -68,6 +68,38 @@ public class User {
         this.password = password;
     }
 
+    public Set<Task> getAssignedTasks() {
+        return assignedTasks;
+    }
+
+    public void setAssignedTasks(Set<Task> assignedTasks) {
+        this.assignedTasks = assignedTasks;
+    }
+
+    public Set<Task> getReportedTasks() {
+        return reportedTasks;
+    }
+
+    public void setReportedTasks(Set<Task> reportedTasks) {
+        this.reportedTasks = reportedTasks;
+    }
+
+    public Set<Notification> getReportedNotes() {
+        return reportedNotes;
+    }
+
+    public void setReportedNotes(Set<Notification> reportedNotes) {
+        this.reportedNotes = reportedNotes;
+    }
+
+    public Set<Notification> getAssignedNotes() {
+        return assignedNotes;
+    }
+
+    public void setAssignedNotes(Set<Notification> assignedNotes) {
+        this.assignedNotes = assignedNotes;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }

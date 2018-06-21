@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Hayk_Mkhitaryan
@@ -44,12 +45,8 @@ public class TaskController {
     // task CRUD
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTask(@PathVariable("id") Long id) {
-        final Task task = taskService.findByIdJoinFetch(id);
-        if (task == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return  new ResponseEntity<>(task, HttpStatus.OK);
+        Optional<Task> task = Optional.ofNullable(taskService.findByIdJoinFetch(id));
+        return task.map(task1 -> new ResponseEntity<>(task1, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping(value = "/")

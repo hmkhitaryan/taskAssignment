@@ -34,6 +34,9 @@ public class Notification {
         this.type = type;
     }
 
+    public Notification() {
+    }
+
     public Long getId() {
         return id;
     }

@@ -13,7 +13,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import javax.jnlp.UnavailableServiceException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,9 +45,9 @@ public class TaskAssignmentApplication {
 
             final Task task = new Task(createdReporteeUser, createdAssigneeUser, Severity.MAJOR, Status.CREATED, new Date(), "New Task is created");
             final Task taskCreated = taskRepository.save(task);
-//            Task task1 = taskRepository.getOne(5L);
-//            System.out.println(task1.getStatus());
-            final Long id = taskCreated.getId();
+////            Task task1 = taskRepository.getOne(5L);
+////            System.out.println(task1.getStatus());
+//            final Long id = taskCreated.getId();
         };
     }
 }
